@@ -1,7 +1,3 @@
-Copy everything below and paste it directly into your `README.md` file:
-
-Writing
-
 # Segment Intersection
 
 A JavaScript project that calculates and visualises the intersection point of two line segments using linear interpolation (lerp).
