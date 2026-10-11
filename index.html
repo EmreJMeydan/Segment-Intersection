@@ -20,24 +20,79 @@
         const D={x:250,y:200};
 
         const ctx=myCanvas.getContext("2d");
+
+        animate();
+
+        function animate(){
         
+            ctx.beginPath();
+            ctx.clearRect(0,0,myCanvas.width,myCanvas.height);
+
+            ctx.moveTo(A.x,A.y);
+            ctx.lineTo(B.x,B.y);
+            ctx.moveTo(C.x,C.y);
+            ctx.lineTo(D.x,D.y);
+            ctx.stroke();
+
+            drawDot(A, "A");
+            drawDot(B, "B");
+            drawDot(C, "C");
+            drawDot(D, "D");
+
+            const M={
+                x:lerp(A.x,B.x,t),
+                y:lerp(A.y,B.y,t)
+            }
+
+            const N={
+                x:lerp(C.x,D.x,t),
+                y:lerp(C.y,D.y,t)
+            }
+
+            drawDot(M,"M", t<0 || t>1);
+            drawDot(N,"N", t<0 || t>1);
+
+            const I=getIntersection(A,B,C,D);
+            drawDot(I, "I");
+
+            t+=0.005;
+            requestAnimationFrame(animate);
+        }
+
+        function getIntersection(A,B,C,D){
+        /*
+            Ix = Ax+(Bx-Ax)t = Cx+(Dx-Cx)u
+            Iy = Ay+(By-Ay)t = Cy+(Dy-Cy)u
+
+            Ax+(Bx-Ax)t = Cx+(Dx-Cx)u Ix = |-Cx
+            (Ax-Cx)+(Bx-Ax)t = (Dx-Cx)u
+
+            Ay+(By-Ay)t = Cy+(Dy-Cy)u |-Cy
+            (Ay-Cy)+(By-Ay)t = (Dy-Cy)u |*(Dx-Cx)
+
+            (Dx-Cx)(Ay-Cy)+(Dx-Cx)(By-Ay)t = 
+            = (Dy-Cy)(Dx-Cx)u+(Ax-Cx)(Bx-Ax)t |-(Dy-Cy)(Ax-Cx)
+                                              |-(Dx-Cx)(By-Ay)t
+            
+            (Dx-Cx)(Ay-Cy)-(Dy-Cy)(Ax-Cx) =
+            (Dy-Cy)(Bx-Ax)t-(Dx-Cx)(By-Ay)t                                 
+        */
+            const top=(D.x-C.x)*(A.y-C.y)-(D.y-C.y)*(A.x-C.x);
+            const bottom=(D.y-C.y)*(B.x-A.x)-(D.x-C.x)*(B.y-A.y);
+            const t=top/bottom;
+            return{
+                x:lerp(A.x,B.x,t),
+                y:lerp(A.y,B.y,t)
+            }
+        }
+
+        function lerp(A,B,t){
+            return A+(B-A)*t
+        }
+
+        function drawDot(point,label,isRed){
         ctx.beginPath();
-
-        ctx.moveTo(A.x,A.y);
-        ctx.lineTo(B.x,B.y);
-        ctx.moveTo(C.x,C.y);
-        ctx.lineTo(D.x,D.y);
-        
-        ctx.stroke();
-
-        drawDot(A, "A");
-        drawDot(B, "B");
-        drawDot(C, "C");
-        drawDot(D, "D");
-
-        function drawDot(point,label){
-        ctx.beginPath();
-        ctx.fillStyle="white";
+        ctx.fillStyle=isRed?"red":"white";
         ctx.arc(point.x,point.y,10,0,Math.PI*2);
         ctx.fill();
         ctx.stroke();
