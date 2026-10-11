@@ -14,7 +14,7 @@ The intersection point is displayed whenever the two segments cross within their
 - Calculates the intersection point using linear interpolation.
 - Checks whether the intersection lies within both segments.
 - Returns `null` when no single intersection point exists.
-- Updates the visualization in real time as the segments move.
+- Updates the visualisation in real time as the segments move.
 
 ## Technologies Used
 
